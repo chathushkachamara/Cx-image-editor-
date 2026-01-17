@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CX Image Editor – Turn Words Into Stunning Images Instantly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{--blue:#1E90FF;--bg:#f6f8fa;--radius:14px;--shadow:0 8px 24px rgba(0,0,0,.08);}
+    *{box-sizing:border-box;margin:0;font-family:system-ui,Arial,Helvetica,sans-serif}
+    body{background:var(--bg);color:#111;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem}
+    h1{font-size:2.2rem;font-weight:800;text-align:center}h1 span{color:var(--blue)}
+    p.sub{text-align:center;margin:.5rem 0 1.8rem;color:#555}
+    .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem;width:100%;max-width:640px}
+    .row{display:flex;gap:.75rem}
+    input[type=text]{flex:1;padding:.75rem 1rem;border:1px solid #ddd;border-radius:var(--radius);font-size:1rem}
+    button{cursor:pointer;border:none;border-radius:var(--radius);padding:.75rem 1.4rem;font-size:1rem;font-weight:600;transition:.2s}
+    .btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#1873cc}
+    .btn-dark{background:#222;color:#fff}.btn-dark:hover{background:#000}
+    select{padding:.55rem .75rem;border:1px solid #ddd;border-radius:var(--radius);background:#fff}
+    .opts{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+    .hide{display:none}
+    .center{text-align:center}
+    #imgResult{width:100%;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .sample img{width:100%;border-radius:var(--radius);cursor:pointer;transition:transform .2s}
+    .sample img:hover{transform:scale(1.03)}
+    .sample p{margin-top:.4rem;font-size:.85rem;color:#444}
+    .spin{width:40px;height:40px;margin:2rem auto;border:4px solid #ddd;border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .fade{animation:fade .7s forwards}
+    @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+<base target="_blank">
+</head>
+
+<body>
+  <h1>Turn Words Into <span>Stunning Images</span> Instantly</h1>
+  <p class="sub">Free 5-image daily quota – no credit card</p>
+
+  <!-- PROMPT CARD -->
+  <div class="card">
+    <div class="row">
+      <input id="prompt" type="text" placeholder="A futuristic cyberpunk dragon overlooking a neon city, 4K">
+      <button class="btn-primary" onclick="generateImg()">Generate</button>
+    </div>
+    <div class="opts">
+      <select id="style"><option>Realistic</option><option>Cartoon</option><option>Anime</option><option>Cinematic</option><option>Futuristic</option></select>
+      <select id="res"><option>512×512</option><option>768×768</option><option>1024×1024</option></select>
+    </div>
+  </div>
+
+  <!-- SAMPLE GALLERY (nano-banana featured) -->
+  <div class="card sample" style="margin-top:1.2rem">
+    <h2 style="margin-bottom:.5rem;font-size:1.1rem">Example Gallery</h2>
+    <img src="https://static.higgsfield.ai/nano-banana-pro-og-cover-2.png" alt="sample">
+    <p>Nano Banana Pro – click to load prompt</p>
+    <button class="btn-dark" style="margin-top:.4rem" onclick="loadPrompt('Nano Banana Pro hyper-detailed render, vibrant colors, cinematic lighting')">Use This Prompt</button>
+  </div>
+
+  <!-- SPINNER -->
+  <div id="wait" class="hide center"><div class="spin"></div><p>AI is painting your idea… (~8 s)</p></div>
+
+  <!-- RESULT -->
+  <div id="res" class="hide card center fade">
+    <img id="imgResult" alt="generated image">
+    <div class="row" style="margin-top:1rem;justify-content:center">
+      <a id="dlBtn" class="btn-primary" href="" download="cx-image.png">Download</a>
+      <button class="btn-dark" onclick="shareImg()">Share</button>
+    </div>
+  </div>
+
+  <!-- HIDDEN DIRECT-LINK AD -->
+  <a id="adLink" href="https://otieu.com/4/10476586" target="_blank" rel="nofollow noopener" class="hide"></a>
+
+  <script>
+    function loadPrompt(txt){ document.getElementById('prompt').value = txt; }
+    function generateImg(){
+      const prompt = document.getElementById('prompt').value.trim();
+      if(!prompt){ alert('Enter a prompt first'); return; }
+      show('wait'); hide('res');
+      setTimeout(()=>{
+        const fakeSrc = `https://source.unsplash.com/1024x1024/?${encodeURIComponent(prompt.split(' ')[0])}`;
+        const img = document.getElementById('imgResult');
+        img.src = fakeSrc;
+        document.getElementById('dlBtn').href = fakeSrc;
+        hide('wait'); show('res');
+        document.getElementById('adLink').click();
+      }, 8000);
+    }
+    function shareImg(){
+      const url = document.getElementById('imgResult').src;
+      const text = 'Just created this with CX Image Editor – try it free!';
+      if(navigator.share){ navigator.share({title:'CX Image', text, url}); }
+      else{ window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`); }
+    }
+    function show(id){ document.getElementById(id).classList.remove('hide'); }
+    function hide(id){ document.getElementById(id).classList.add('hide'); }
+  </script>
+</body>
+</html>
